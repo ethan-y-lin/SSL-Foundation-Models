@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J run_exp                    # Job name
+#SBATCH -J run_exp_seed42                    # Job name
 #SBATCH --requeue
 #SBATCH -o logs/run_exp_%j.out         # stdout (%j=jobID)
 #SBATCH -e logs/run_exp_%j.err         # stderr
@@ -47,7 +47,7 @@ FT="lora"
 ALGO="fixmatch"
 DATASET="resisc45"
 K="k1"
-SEED="seed26"
+SEED="seed42"
 MODEL="clip"
 # ---------------------------------------------------------------
 

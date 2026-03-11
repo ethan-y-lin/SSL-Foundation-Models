@@ -69,4 +69,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-# python scripts/generate_configs.py --template "config/lora/fixmatch/resisc45/k1/seed0/clip/config.yaml" --ssl_method "fixmatch" --dataset "resisc45" --split "k1" --model "clip" --seed "seed26"
+# python scripts/generate_configs.py --template "config/lora/fixmatch/resisc45/k1/seed0/clip/config.yaml" --ssl_method "fixmatch" --dataset "resisc45" --split "k1" --model "clip" --seed "seed42"

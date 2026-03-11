@@ -1,8 +1,8 @@
 algorithm: fixmatch
-save_dir: ./saved_models/lora/fixmatch/resisc45/k1/seed26/clip
+save_dir: /share/j_sun/ethan/ssl-baselines/saved_models/lora/fixmatch/resisc45/k1/seed26/clip
 save_name: fixmatch_resisc45_k1_seed26_clip
-resume: true
-load_path: ./saved_models/lora/fixmatch/resisc45/k1/seed26/clip/log/latest_model.pth
+resume: false
+load_path: /share/j_sun/ethan/ssl-baselines/saved_models/lora/fixmatch/resisc45/k1/seed26/clip/log/latest_model.pth
 overwrite: true
 use_tensorboard: true
 use_wandb: true
