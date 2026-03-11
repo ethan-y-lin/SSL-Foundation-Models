@@ -20,8 +20,8 @@ class WANDBHook(Hook):
     def before_run(self, algorithm):
         # job_id = '_'.join(algorithm.args.save_name.split('_')[:-1])
         name = algorithm.save_name
-        project = algorithm.save_dir.split('/')[-1]
-
+        project = algorithm.dataset + "-SSL"
+        
         # tags
         benchmark = f'benchmark: {project}'
         dataset = f'dataset: {algorithm.args.dataset}'

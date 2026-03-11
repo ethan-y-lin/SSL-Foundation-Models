@@ -1,0 +1,69 @@
+#!/bin/bash
+#SBATCH -J run_exp                    # Job name
+#SBATCH --requeue
+#SBATCH -o logs/run_exp_%j.out         # stdout (%j=jobID)
+#SBATCH -e logs/run_exp_%j.err         # stderr
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=eyl45@cornell.edu
+#SBATCH -N 1
+#SBATCH -n 16
+#SBATCH --get-user-env
+#SBATCH --mem=64G
+#SBATCH -t 12:00:00
+#SBATCH --partition=jjs533
+#SBATCH --constraint=gpu-high
+#SBATCH --exclude=bhattacharjee-compute-02,snavely-compute-09,genai-large-01,lil-compute-05,unicorn-compute-01
+#SBATCH --gres=gpu:1
+
+
+set -e
+
+# Initialize conda (SLURM jobs don't source .bashrc)
+eval "$(conda shell.bash hook)"
+conda activate vpet
+
+mkdir -p logs
+
+export TMPDIR=/share/j_sun/ethan/tmp
+export HF_HOME=/share/j_sun/ethan/huggingface
+mkdir -p "$TMPDIR" "$HF_HOME"
+
+echo "=== Job Info ==="
+echo "Job ID: $SLURM_JOB_ID"
+echo "Node: $(hostname)"
+echo "GPU: $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'N/A')"
+echo "Date: $(date)"
+echo "================"
+
+cd /home/eyl45/SSL-Foundation-Models
+
+# ---------------------------------------------------------------
+# Change K to run different k-shot partitions:
+#   1, 2, 5, 10, 20  (per-class labeled count)
+# Change ALGO to switch between semi-supervised and supervised:
+#   fixmatch = semi-supervised,  fullysupervised = supervised only
+# ---------------------------------------------------------------
+FT="lora"
+ALGO="fixmatch"
+DATASET="resisc45"
+K="k1"
+SEED="seed26"
+MODEL="clip"
+# ---------------------------------------------------------------
+
+CONFIG="config/${FT}/${ALGO}/${DATASET}/${K}/${SEED}/${MODEL}/config.yaml"
+SAVE_NAME="${FT}_${ALGO}_${DATASET}_${K}_${SEED}_${MODEL}"
+
+if [ ! -f "$CONFIG" ]; then
+    echo "ERROR: Config not found: $CONFIG"
+    echo "Valid K values: 1 2 5 10 20"
+    exit 1
+fi
+
+echo "=== Running: $CONFIG (algo=$ALGO, save=$SAVE_NAME) ==="
+cat "$CONFIG"
+echo "========================="
+
+python train.py --c "$CONFIG" --save_name "$SAVE_NAME"
+
+echo "=== Done: $(date) ==="
